@@ -20,7 +20,7 @@ public class CategoriaService {
 	}
 
 
-	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String directions, String orderBy ){//pagição categoria findPage busca paginada
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy , String directions){//pagição categoria findPage busca paginada
 	    PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(directions), orderBy); //retorna um page request com os parametros passado
 	    return repository.findAll(pageRequest);
 	}
