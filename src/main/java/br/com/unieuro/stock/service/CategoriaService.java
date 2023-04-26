@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import br.com.unieuro.stock.domain.Categoria;
+import br.com.unieuro.stock.domain.dto.CategoriaDTO;
 import br.com.unieuro.stock.repositories.CategoriaRepository;
 import br.com.unieuro.stock.service.exceptions.ObjectNotFoundException;
 
@@ -32,5 +33,31 @@ public class CategoriaService {
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado ID: " + " , Tipo: " + Categoria.class.getName())); // orElseThrow Fazendo um tratamento de excessão do erro do id
 																							
+	}
+	
+	public Categoria update (Categoria obj) {
+		Categoria newObj = findById(obj.getId());
+		updateData(newObj, obj);
+		return repository.save(newObj);
+	}
+	
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setName(obj.getName());
+	}
+	
+	public Categoria fromDTO (CategoriaDTO objDto) { //TRansformando uma categoria em DTO
+		return new Categoria(objDto.getId(), objDto.getName());
+		
+	}
+	
+	public Categoria insert(Categoria obj) {
+		obj.setId(null); //Devido ter criado o banco de dados passando o autoincremento
+		return repository.save(obj);
+	}
+	
+	public void delete (Long id) {//void porque o delete não retorna a nada
+	    findById(id);
+	    repository.deleteById(id);
+	
 	}
 }
