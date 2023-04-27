@@ -3,6 +3,7 @@ package br.com.unieuro.stock.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import br.com.unieuro.stock.domain.Categoria;
 import br.com.unieuro.stock.domain.dto.CategoriaDTO;
 import br.com.unieuro.stock.repositories.CategoriaRepository;
+import br.com.unieuro.stock.service.exceptions.DataIntegrityViolation;
 import br.com.unieuro.stock.service.exceptions.ObjectNotFoundException;
 
 @Service
@@ -57,7 +59,11 @@ public class CategoriaService {
 	
 	public void delete (Long id) {//void porque o delete não retorna a nada
 	    findById(id);
-	    repository.deleteById(id);
+	    try {
+	    	repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolation("Não é possivel excluir uma categoria que possua produtos");
+		}
 	
 	}
 }

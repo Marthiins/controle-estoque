@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.com.unieuro.stock.service.exceptions.DataIntegrityViolation;
 import br.com.unieuro.stock.service.exceptions.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -17,6 +18,13 @@ public class ResourceExceptionHandler { //Manipular os recursos de excessões
 	    StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
 	    		"Não encontrado", e.getMessage(), request.getRequestURI());
 	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolation.class) 
+	public ResponseEntity<StandardError> dataIntegrityViolation(DataIntegrityViolation e , HttpServletRequest request){
+		StandardError error = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				"Erro de integridade de dados", e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);//Erro 400 Bad_Reuqest
 	}
 
 }
