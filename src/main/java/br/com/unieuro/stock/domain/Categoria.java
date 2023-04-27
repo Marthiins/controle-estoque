@@ -1,12 +1,18 @@
 package br.com.unieuro.stock.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Categoria implements Serializable{
@@ -14,9 +20,15 @@ public class Categoria implements Serializable{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "Identificador_categoria")
 	private Long id;
 	
+	@Column(name = "nome_categoria", nullable = true, length = 100)
 	private String name;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "categoria")
+	private List<Produto> produtos = new ArrayList<>();//Criar uma lista de produtos
 	
 	public Categoria () {
 		}
@@ -57,6 +69,10 @@ public class Categoria implements Serializable{
 			return false;
 		Categoria other = (Categoria) obj;
 		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
+	}
+
+	public List<Produto> getProdutos() {
+		return produtos;
 	}
 	
 	
