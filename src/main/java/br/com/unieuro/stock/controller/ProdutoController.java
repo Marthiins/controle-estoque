@@ -16,9 +16,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.unieuro.stock.domain.Produto;
 import br.com.unieuro.stock.domain.dto.ProdutoDTO;
 import br.com.unieuro.stock.service.ProdutoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-
+@Tag(name = "Produtos Endpoint", description = "for Managing Produto")
 @RestController
 @RequestMapping("/produtos")
 public class ProdutoController {
@@ -30,6 +32,7 @@ public class ProdutoController {
 		this.service = service;
 	}
 	
+	@Operation(summary = "FindPage Produtos") /// Summary doc Swagger																	
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	public ResponseEntity<Page<ProdutoDTO>> findPage(
 			@RequestParam(value = "page" , defaultValue = "0")Integer page,
@@ -44,13 +47,14 @@ public class ProdutoController {
 		return ResponseEntity.ok().body(listDTO);
 	}
 	
+	@Operation(summary = "FindById Produtos")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Produto> findById (@PathVariable Long id) { // Encontra uma Produto no banco por ID.
 		Produto obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	
+	@Operation(summary = "Put Produtos")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ProdutoDTO objDto, @PathVariable Long id) {
 		Produto obj = service.fromDTO(objDto);
@@ -59,6 +63,7 @@ public class ProdutoController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@Operation(summary = "Insert Produtos")
 	@RequestMapping(method = RequestMethod.POST)//verbo HTTP
 	public ResponseEntity<Void> insert (@Valid @RequestBody ProdutoDTO objDto){ //Inserir uma Produto
 		Produto obj = service.fromDTO(objDto); //Passando os objetos do FromDTO
@@ -71,6 +76,7 @@ public class ProdutoController {
 	
 	
 	// Metodo para deletar uma Produto é quase igual o findById
+	@Operation(summary = "Delete Produtos")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) //Http do rest
 	public ResponseEntity<Void> delete (@PathVariable Long id){
 		service.delete(id);
